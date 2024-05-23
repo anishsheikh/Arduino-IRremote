@@ -1851,7 +1851,7 @@ void TIMER2_IRQHandler(void) {
  * http://dan.drown.org/stm32duino/package_STM32duino_index.json
  * STM32F1 architecture for "Generic STM32F103C series" from "STM32F1 Boards (Arduino_STM32)" of Arduino Board manager
  **********************************************************************************************************************/
-#elif defined(__STM32F1__) || defined(ARDUINO_ARCH_STM32F1)
+#elif defined(__STM32F1__) || defined(ARDUINO_ARCH_STM32F1) || defined(__STM32G0__)
 #include <HardwareTimer.h> // 4 timers and 4. timer (4.channel) is used for tone()
 #  if defined(SEND_PWM_BY_TIMER)
 #error PWM generation by hardware not implemented for STM32
@@ -1861,7 +1861,7 @@ void TIMER2_IRQHandler(void) {
  * Use timer 3 as IR timer.
  * Timer 3 blocks PA6, PA7, PB0, PB1, so if you require one of them as tone() or Servo output, you must choose another timer.
  */
-HardwareTimer s50usTimer(3);
+HardwareTimer s50usTimer(3); // TIM3 hasn't been tested for ir sender with G0
 
 void timerEnableReceiveInterrupt() {
     s50usTimer.resume();
@@ -1889,7 +1889,7 @@ void timerConfigForReceive() {
  * https://github.com/stm32duino/BoardManagerFiles/raw/master/STM32/package_stm_index.json
  * stm32 architecture for "Generic STM32F1 series" from "STM32 Boards (selected from submenu)" of Arduino Board manager
  **********************************************************************************************************************/
-#elif defined(STM32F1xx) || defined(ARDUINO_ARCH_STM32)
+#elif defined(STM32F1xx) || defined(ARDUINO_ARCH_STM32) || defined(STM32G0xx)
 #include <HardwareTimer.h> // 4 timers and 3. timer is used for tone(), 2. for Servo
 #  if defined(SEND_PWM_BY_TIMER)
 #error PWM generation by hardware not implemented for STM32
@@ -1902,7 +1902,7 @@ void timerConfigForReceive() {
 #  if defined(TIM4)
 HardwareTimer s50usTimer(TIM4);
 #  else
-HardwareTimer s50usTimer(TIM2);
+HardwareTimer s50usTimer(TIM3); //lack of TIM2 , we are using TIM3 for G0 because it specifies a general-purpose timer with needed features.
 #  endif
 
 void timerEnableReceiveInterrupt() {
